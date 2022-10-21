@@ -145,9 +145,13 @@ function rectangularCollision({rectangle1, rectangle2}) {
     )
 }
 
+const battle = {
+    initiated: false
+}
+
 // Animation loop
 function animate() {
-    window.requestAnimationFrame(animate);
+    const animationId = window.requestAnimationFrame(animate);
     background.draw();
     // Draw all boundaries
     boundaries.forEach(boundary => {
@@ -159,35 +163,57 @@ function animate() {
     player.draw();   
     foreground.draw();
 
-    // Check collision with battlezones
-    if(keys.w.pressed || keys.a.pressed || keys.s.pressed || keys.d.pressed) {
-        for(let i = 0; i < battleZonesMap.length - 2; i++) {
-            const battleZone = battleZones[i]; 
-            const overlappingArea =
-             (Math.min(
-                player.position.x + player.width, 
-                battleZone.position.x + battleZone.width
-                ) - 
-                  Math.max(player.position.x, battleZone.position.x)) *
-             (Math.min(
-                player.position.y + player.height, 
-                battleZone.position.y + battleZone.height
-                ) - 
-                  Math.max(player.position.y, battleZone.position.y));
-            if(rectangularCollision({
-                rectangle1: player,
-                rectangle2: battleZone
-              }) && overlappingArea > (player.width * player.height) / 2
-                 && Math.random() < 0.01 // Chance battle starts
-            ) {
-                console.log('battle')
-                break;
-            }
-        }
-    }
-
     let moving = true;
     player.moving = false;
+
+    if(battle.initiated === false) {
+        // Check collision with battlezones
+        if(keys.w.pressed || keys.a.pressed || keys.s.pressed || keys.d.pressed) {
+            for(let i = 0; i < battleZonesMap.length - 2; i++) {
+                const battleZone = battleZones[i]; 
+                const overlappingArea =
+                (Math.min(
+                    player.position.x + player.width, 
+                    battleZone.position.x + battleZone.width
+                    ) - 
+                    Math.max(player.position.x, battleZone.position.x)) *
+                (Math.min(
+                    player.position.y + player.height, 
+                    battleZone.position.y + battleZone.height
+                    ) - 
+                    Math.max(player.position.y, battleZone.position.y));
+                if(rectangularCollision({
+                    rectangle1: player,
+                    rectangle2: battleZone
+                }) && overlappingArea > (player.width * player.height) / 2
+                    && Math.random() < 0.01 // Chance battle starts
+                ) {
+                    // Deactivate curren animation loop
+                    window.cancelAnimationFrame(animationId);
+                    battle.initiated = true;
+                    // Flash screen animation
+                    gsap.to('.flash-screen', {
+                        opacity: 1,
+                        repeat: 3,
+                        yoyo: true,
+                        duration: 0.4,
+                        onComplete() {
+                            gsap.to('.flash-screen', {
+                                opacity: 1,
+                                duration: 0.4
+                            });
+                            // Activate new animation loop
+                            animateBattle();         
+                        }
+                    });
+                    break;
+                }
+            }
+        }
+    } else {
+        return
+    }
+
     if(keys.w.pressed && lastKey === 'w') {
         player.moving = true;
         player.image = player.sprites.up;
@@ -288,6 +314,20 @@ function animate() {
 }
 
 animate();
+
+const battleBackgroundImage = new Image();
+battleBackgroundImage.src = './images/battleBackground.png';
+const battleBackground = new Sprite({   
+    position: {
+        x: 0,
+        y: 0
+    },
+    image: battleBackgroundImage
+})
+
+function animateBattle() {
+    window.requestAnimationFrame(animateBattle);
+}
 
 // Movement
 let lastKey;
