@@ -149,6 +149,8 @@ const battle = {
     initiated: false
 }
 
+const battleMusic = new Audio('./audio/1-10 - Battle! (Wild Pokémon).mp3');
+
 // Animation loop
 function animate() {
     const animationId = window.requestAnimationFrame(animate);
@@ -191,6 +193,7 @@ function animate() {
                     // Deactivate curren animation loop
                     window.cancelAnimationFrame(animationId);
                     battle.initiated = true;
+                    battleMusic.play();
                     // Flash screen animation
                     gsap.to('.flash-screen', {
                         opacity: 1,
@@ -200,10 +203,16 @@ function animate() {
                         onComplete() {
                             gsap.to('.flash-screen', {
                                 opacity: 1,
-                                duration: 0.4
-                            });
-                            // Activate new animation loop
-                            animateBattle();         
+                                duration: 0.4,
+                                onComplete() {
+                                    // Activate new animation loop
+                                    animateBattle();       
+                                    gsap.to('.flash-screen', {
+                                        opacity: 0,
+                                        duration: 0.4                  
+                                    });          
+                                }
+                            });     
                         }
                     });
                     break;
@@ -327,6 +336,7 @@ const battleBackground = new Sprite({
 
 function animateBattle() {
     window.requestAnimationFrame(animateBattle);
+    battleBackground.draw();
 }
 
 // Movement
