@@ -1,5 +1,16 @@
+const startButton = document.getElementById('start');
 const canvas = document.querySelector('canvas');
 const c = canvas.getContext('2d'); // Context canvas
+
+const overworldMusic = document.createElement('audio');
+overworldMusic.setAttribute('src', './audio/1-23 - Jubilife City (Day).mp3');
+overworldMusic.loop = true;
+
+startButton.addEventListener("click", () => {
+    startButton.remove();
+    animate();
+    overworldMusic.play();
+});
 
 canvas.width = 1024;
 canvas.height = 576;
@@ -149,7 +160,9 @@ const battle = {
     initiated: false
 }
 
-const battleMusic = new Audio('./audio/1-10 - Battle! (Wild Pokémon).mp3');
+const battleMusic = document.createElement('audio');
+battleMusic.setAttribute('src', './audio/1-10 - Battle! (Wild Pokémon).mp3');
+battleMusic.loop = true;
 
 // Animation loop
 function animate() {
@@ -193,6 +206,7 @@ function animate() {
                     // Deactivate curren animation loop
                     window.cancelAnimationFrame(animationId);
                     battle.initiated = true;
+                    overworldMusic.pause();
                     battleMusic.play();
                     // Flash screen animation
                     gsap.to('.flash-screen', {
@@ -321,8 +335,6 @@ function animate() {
         }
     }
 }
-
-animate();
 
 const battleBackgroundImage = new Image();
 battleBackgroundImage.src = './images/battleBackground.png';
