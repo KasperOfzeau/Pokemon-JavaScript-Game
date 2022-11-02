@@ -1,5 +1,14 @@
+* {
+    font-family: 'Press Start 2P', cursive;
+}
+
 body {
     background-color: #000;
+}
+
+h1 {
+    margin: 0;
+    font-size: 16px;
 }
 
 .container {
@@ -16,4 +25,39 @@ body {
     bottom: 0;
     opacity: 0;
     pointer-events: none;
+}
+
+.attack-bar {
+   display: flex;
+   background-color: #fff;
+   height: 140px; 
+   position: absolute;
+   bottom: 0;
+   left: 0;
+   right: 0;
+   border-top: 4px black solid;
+}
+
+.attacks {
+    width: 66.66%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+button {
+    border: 0;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #ddd;
+    cursor: pointer;
+}
+
+.attack-type {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 33.33%;
+    border-left: 4px black solid;
 }
