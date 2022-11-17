@@ -41,9 +41,11 @@ document.querySelectorAll('.attack-button').forEach((button) => {
             renderedSprites
         });
 
+        const randomAttack = draggle.attacks[Math.floor.random() * draggle.attacks.length];
+
         queue.push(() => {
             draggle.attack({ 
-                attack: attacks.Tackle,
+                attack: randomAttack,
                 recipient: emby,
                 renderedSprites
             });
