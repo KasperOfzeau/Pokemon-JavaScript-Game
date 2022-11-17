@@ -77,8 +77,6 @@ class Pokemon extends Sprite {
         dialogContainer.style.display = 'block';
         dialogContainer.innerHTML = this.name + ' used ' + attack.name;
 
-        recipient.health = recipient.health - attack.damage;
-
         let rotation = 1;        
         let movementDistance = 20;
         let healthBar = '#enemyHealthBar';
@@ -166,6 +164,7 @@ class Pokemon extends Sprite {
                 })
             break;
         }
+        recipient.health = recipient.health - attack.damage;
     }
 }
 
@@ -179,7 +178,7 @@ class Boundary {
     }
 
     draw() {
-        c.fillStyle = 'rgba(255, 0, 0, 1)';
+        c.fillStyle = 'rgba(255, 0, 0, 0)';
         c.fillRect(this.position.x, this.position.y, this.width, this.height);
     }
 }
