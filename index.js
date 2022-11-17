@@ -337,68 +337,6 @@ function animate() {
     }
 }
 
-const battleBackgroundImage = new Image();
-battleBackgroundImage.src = './images/battleBackground.png';
-const battleBackground = new Sprite({   
-    position: {
-        x: 0,
-        y: 0
-    },
-    image: battleBackgroundImage
-})
-
-const draggleImage = new Image();
-draggleImage.src = './images/draggleSprite.png';
-const draggle = new Sprite({
-    position: {
-        x: 800,
-        y: 100
-    },
-    image: draggleImage,
-    frames: {
-        max: 4,
-        hold: 60
-    }, 
-    animate: true
-});
-
-const embyImage = new Image();
-embyImage.src = './images/embySprite.png';
-const emby = new Sprite({
-    position: {
-        x: 280,
-        y: 325
-    },
-    image: embyImage,
-    frames: {
-        max: 4,
-        hold: 40
-    }, 
-    animate: true
-});
-
-const renderedSprites = [draggle, emby];
-function animateBattle() {
-    window.requestAnimationFrame(animateBattle);
-    battleBackground.draw();
-
-    renderedSprites.forEach(sprite => {
-        sprite.draw();
-    })
-}
-
-// Event listeners for attack buttons
-document.querySelectorAll('.attack-button').forEach((button) => {
-    button.addEventListener('click', (e) => {
-        const selectedAttack = attacks[e.currentTarget.innerHTML];
-        emby.attack({ 
-            attack: selectedAttack,
-            recipient: draggle,
-            renderedSprites
-        })
-    });
-});
-
 // Movement
 let lastKey;
 window.addEventListener('keydown', (e) => {

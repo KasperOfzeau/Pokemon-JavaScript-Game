@@ -1,5 +1,5 @@
 class Sprite {
-    constructor({position, image, frames = { max: 1, hold: 20 }, sprites, animate = false, isEnemy = false}) {
+    constructor({position, image, frames = { max: 1, hold: 20 }, sprites, animate = false, isEnemy = false, name}) {
         this.position = position;
         this.image = image;
         this.frames = {...frames, val: 0, elapsed: 0};
@@ -13,6 +13,7 @@ class Sprite {
         this.health = 100;
         this.isEnemy = isEnemy;
         this.rotation = 0;
+        this.name = name;
     }
 
     draw() {
@@ -48,6 +49,10 @@ class Sprite {
     }
 
     attack({ attack, recipient, renderedSprites}) {
+
+        let dialogContainer = document.querySelector('.dialog');
+        dialogContainer.style.display = 'block';
+        dialogContainer.innerHTML = this.name + ' used ' + attack.name;
 
         this.health = this.health - attack.damage;
 
