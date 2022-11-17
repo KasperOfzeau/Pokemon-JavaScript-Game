@@ -8,39 +8,18 @@ const battleBackground = new Sprite({
     image: battleBackgroundImage
 })
 
-const draggleImage = new Image();
-draggleImage.src = './images/draggleSprite.png';
-const draggle = new Sprite({
-    position: {
-        x: 800,
-        y: 100
-    },
-    image: draggleImage,
-    frames: {
-        max: 4,
-        hold: 60
-    }, 
-    animate: true,
-    name: 'Draggle'
-});
-
-const embyImage = new Image();
-embyImage.src = './images/embySprite.png';
-const emby = new Sprite({
-    position: {
-        x: 280,
-        y: 325
-    },
-    image: embyImage,
-    frames: {
-        max: 4,
-        hold: 40
-    }, 
-    animate: true,
-    name: "Emby"
-});
+const draggle = new Pokemon(pokemon.Draggle);
+const emby = new Pokemon(pokemon.Emby);
 
 const renderedSprites = [draggle, emby];
+
+emby.attacks.forEach((attack) => {
+    const button = document.createElement('button');
+    button.classList.add('attack-button');
+    button.innerHTML = attack.name;
+    document.querySelector('.attacks').append(button);
+})
+
 function animateBattle() {
     window.requestAnimationFrame(animateBattle);
     battleBackground.draw();

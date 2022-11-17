@@ -10,10 +10,7 @@ class Sprite {
         this.animate = animate;
         this.sprites = sprites;
         this.opacity = 1;
-        this.health = 100;
-        this.isEnemy = isEnemy;
         this.rotation = 0;
-        this.name = name;
     }
 
     draw() {
@@ -46,6 +43,18 @@ class Sprite {
                 }
             }
         }    
+    }
+}
+
+class Pokemon extends Sprite {
+
+    constructor({position, image, frames = { max: 1, hold: 20 }, sprites, animate = false, rotation = 0, isEnemy = false, name, attacks}) {
+        
+        super({position, image, frames, sprites, animate, rotation});   
+        this.isEnemy = isEnemy;
+        this.name = name;
+        this.health = 100;
+        this.attacks = attacks;
     }
 
     attack({ attack, recipient, renderedSprites}) {
