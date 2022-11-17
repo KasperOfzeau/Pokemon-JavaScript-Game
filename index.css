@@ -1,4 +1,122 @@
-body {
-    background-color: black;
+* {
+    font-family: 'Press Start 2P', cursive;
 }
 
+body {
+    background-color: #000;
+}
+
+p {
+    margin: 0;
+    font-size: 16px;
+}
+
+.container {
+    display: inline-block;
+    position: relative;
+}
+
+.flash-screen {
+    background-color: #000;
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.user-interface {
+    display: none;
+}
+
+.health-container-enemy, .health-container-player {
+    position: absolute;
+    background-color: #fff;
+    border: 4px #000 solid;
+    width: 250px;
+    padding: 12px;
+}
+
+.health-container-enemy {
+    top: 50px;
+    left: 50px;
+}
+
+.health-container-player {
+    bottom: 194px;
+    right: 50px;
+}
+
+.health-bar-container {
+    position: relative;
+}
+
+.health-bar-background, .health-bar  {
+    height: 5px;
+}
+
+.health-bar-background {
+    margin-top: 10px;
+    background-color: #ccc;
+}
+
+.health-bar {
+    background-color: green;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+}
+
+.bottom-bar {
+   display: flex;
+   background-color: #fff;
+   height: 140px; 
+   position: absolute;
+   bottom: 0;
+   left: 0;
+   right: 0;
+   border-top: 4px black solid;
+}
+
+.dialog {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-color: #fff;
+    padding: 12px;
+    display: none;
+}
+
+.dialog:hover {
+    cursor: pointer;
+}
+
+.attacks {
+    width: 66.66%;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+button {
+    border: 0;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #ddd;
+    cursor: pointer;
+}
+
+.attack-type {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 33.33%;
+    border-left: 4px black solid;
+}

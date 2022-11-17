@@ -1,5 +1,45 @@
-<link rel="stylesheet" href="index.css">
-<canvas></canvas>
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+</head>
+<button id="start">Start</button>
+<div class="container">
+    <div class="flash-screen" ></div>
+
+    <canvas></canvas>
+
+    <div class="user-interface">
+        <div class="health-container-enemy">
+            <p>Draggle</p>
+            <div class="health-bar-container">
+                <div class="health-bar-background"></div>
+                <div class="health-bar" id="enemyHealthBar"></div>
+            </div>
+        </div>
+        <div class="health-container-player">
+            <p>Emby</p>
+            <div class="health-bar-container">
+                <div class="health-bar-background"></div>
+                <div class="health-bar" id="playerHealthBar"></div>
+            </div>
+        </div>
+
+        <div class="bottom-bar">
+            <div class="dialog"></div>
+            <div class="attacks"></div>
+            <div class="attack-type">
+                <p>Attack type</p>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js" integrity="sha512-H6cPm97FAsgIKmlBA4s774vqoN24V5gSQL4yBTDOY2su2DeXZVhQPxFK4P6GPdnZqM9fg1G3cMv5wD7e6cFLZQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="./data/collision.js"></script>
+<script src="./data/battleZones.js"></script>
+<script src="./data/attacks.js"></script>
+<script src="./data/pokemon.js"></script>
 <script src="classes.js"></script>
 <script src="index.js"></script>
+<script src="battlescene.js"></script>

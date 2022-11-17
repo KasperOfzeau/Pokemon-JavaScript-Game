@@ -1,5 +1,16 @@
+const startButton = document.getElementById('start');
 const canvas = document.querySelector('canvas');
 const c = canvas.getContext('2d'); // Context canvas
+
+const overworldMusic = document.createElement('audio');
+overworldMusic.setAttribute('src', './audio/1-23 - Jubilife City (Day).mp3');
+overworldMusic.loop = true;
+
+startButton.addEventListener("click", () => {
+    startButton.remove();
+    animate();
+    overworldMusic.play();
+});
 
 canvas.width = 1024;
 canvas.height = 576;
@@ -8,6 +19,12 @@ canvas.height = 576;
 const collisionsMap = [];
 for( let i = 0; i < collisions.length; i += 70) {
     collisionsMap.push(collisions.slice(i, i + 70));
+}
+
+// Map battle zones
+const battleZonesMap = [];
+for( let i = 0; i < battleZonesData.length; i += 70) {
+    battleZonesMap.push(battleZonesData.slice(i, i + 70));
 }
 
 const boundaries = [];
@@ -21,6 +38,24 @@ collisionsMap.forEach((row, i) => {
     row.forEach((symbol, j) => {
         if(symbol === 1025) {
             boundaries.push(
+                new Boundary({
+                    position: {
+                        x:  j * Boundary.width + offset.x,
+                        y:  i * Boundary.height + offset.y,
+                    }
+                }) 
+            )
+        }
+    })
+})
+
+const battleZones = [];
+
+// Create battle zones
+battleZonesMap.forEach((row, i) => {
+    row.forEach((symbol, j) => {
+        if(symbol === 1025) {
+            battleZones.push(
                 new Boundary({
                     position: {
                         x:  j * Boundary.width + offset.x,
@@ -62,7 +97,8 @@ const player = new Sprite({
     },
     image: playerDownImage,
     frames: {
-        max: 4
+        max: 4,
+        hold: 20
     },
     sprites: {
         up: playerUpImage,
@@ -109,7 +145,7 @@ const keys = {
     },
 }
 
-const movables = [background, ...boundaries, foreground];
+const movables = [background, ...boundaries, foreground, ...battleZones];
 
 // Collision function
 function rectangularCollision({rectangle1, rectangle2}) {
@@ -121,21 +157,91 @@ function rectangularCollision({rectangle1, rectangle2}) {
     )
 }
 
+const battle = {
+    initiated: false
+}
+
+const battleMusic = document.createElement('audio');
+battleMusic.setAttribute('src', './audio/1-10 - Battle! (Wild Pokémon).mp3');
+battleMusic.loop = true;
+
+// Animation loop
 function animate() {
-    window.requestAnimationFrame(animate);
+
+    const animationId = window.requestAnimationFrame(animate);
     background.draw();
     // Draw all boundaries
     boundaries.forEach(boundary => {
         boundary.draw();
     });
-
+    battleZones.forEach(battleZone => {
+        battleZone.draw();
+    })
     player.draw();   
     foreground.draw();
 
     let moving = true;
-    player.moving = false;
+    player.animate = false;
+
+    if(battle.initiated === false) {
+        // Check collision with battlezones
+        if(keys.w.pressed || keys.a.pressed || keys.s.pressed || keys.d.pressed) {
+            for(let i = 0; i < battleZonesMap.length - 2; i++) {
+                const battleZone = battleZones[i]; 
+                const overlappingArea =
+                (Math.min(
+                    player.position.x + player.width, 
+                    battleZone.position.x + battleZone.width
+                    ) - 
+                    Math.max(player.position.x, battleZone.position.x)) *
+                (Math.min(
+                    player.position.y + player.height, 
+                    battleZone.position.y + battleZone.height
+                    ) - 
+                    Math.max(player.position.y, battleZone.position.y));
+                if(rectangularCollision({
+                    rectangle1: player,
+                    rectangle2: battleZone
+                }) && overlappingArea > (player.width * player.height) / 2
+                    && Math.random() < 0.01 // Chance battle starts
+                ) {
+                    // Deactivate curren animation loop
+                    window.cancelAnimationFrame(animationId);
+                    battle.initiated = true;
+                    overworldMusic.pause();
+                    battleMusic.play();
+                    // Flash screen animation
+                    gsap.to('.flash-screen', {
+                        opacity: 1,
+                        repeat: 3,
+                        yoyo: true,
+                        duration: 0.4,
+                        onComplete() {
+                            gsap.to('.flash-screen', {
+                                opacity: 1,
+                                duration: 0.4,
+                                onComplete() {
+                                    // Activate new animation loop
+                                    initBattle();
+                                    animateBattle();       
+                                    gsap.to('.flash-screen', {
+                                        opacity: 0,
+                                        duration: 0.4                  
+                                    });          
+                                }
+                            });     
+                        }
+                    });
+                    break;
+                }
+            }
+        }
+    } else {
+        return
+    }
+
     if(keys.w.pressed && lastKey === 'w') {
-        player.moving = true;
+        player.animate = true;
         player.image = player.sprites.up;
 
         for(let i = 0; i < boundaries.length; i++) {
@@ -152,13 +258,15 @@ function animate() {
                 break;
             }
         }
+
         if(moving) {
             movables.forEach(movable => { 
                 movable.position.y += 2;
             })
         }
+
     } else if(keys.a.pressed && lastKey === 'a'){
-        player.moving = true;
+        player.animate = true;
         player.image = player.sprites.left;
 
         for(let i = 0; i < boundaries.length; i++) {
@@ -182,7 +290,7 @@ function animate() {
         }
     }
     else if(keys.s.pressed && lastKey === 's') {
-        player.moving = true;
+        player.animate = true;
         player.image = player.sprites.down;
 
         for(let i = 0; i < boundaries.length; i++) {
@@ -206,7 +314,7 @@ function animate() {
         }
     }
     else if(keys.d.pressed && lastKey === 'd') {
-        player.moving = true;
+        player.animate = true;
         player.image = player.sprites.right;
 
         for(let i = 0; i < boundaries.length; i++) {
@@ -230,8 +338,6 @@ function animate() {
         }
     }
 }
-
-animate();
 
 // Movement
 let lastKey;
