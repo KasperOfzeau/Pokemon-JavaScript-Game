@@ -8,7 +8,7 @@ overworldMusic.loop = true;
 
 startButton.addEventListener("click", () => {
     startButton.remove();
-    animateBattle();
+    animate();
     overworldMusic.play();
 });
 
@@ -167,6 +167,7 @@ battleMusic.loop = true;
 
 // Animation loop
 function animate() {
+
     const animationId = window.requestAnimationFrame(animate);
     background.draw();
     // Draw all boundaries
@@ -221,6 +222,7 @@ function animate() {
                                 duration: 0.4,
                                 onComplete() {
                                     // Activate new animation loop
+                                    initBattle();
                                     animateBattle();       
                                     gsap.to('.flash-screen', {
                                         opacity: 0,
