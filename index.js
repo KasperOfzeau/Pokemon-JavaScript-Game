@@ -384,6 +384,18 @@ function animateBattle() {
     emby.draw();
 }
 
+document.querySelectorAll('.attack-button').forEach((button) => {
+    button.addEventListener('click', () => {
+        emby.attack({ attack: {
+            name: 'Tackle',
+            damage: 10,
+            type: 'Normal',
+        },
+        recipient: draggle
+     })
+    });
+});
+
 // Movement
 let lastKey;
 window.addEventListener('keydown', (e) => {
